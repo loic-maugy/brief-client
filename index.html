@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brief Client – KHILI.PEINTURE</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --red: #C0392B;
+  --dark: #111;
+  --gold: #d4af37;
+  --bg: #f8f7f5;
+  --card: #ffffff;
+  --border: #e0ddd8;
+  --text: #1a1a1a;
+  --muted: #888;
+}
+
+body {
+  background: var(--bg);
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ── HEADER ── */
+.header {
+  background: var(--dark);
+  color: #fff;
+  padding: 48px 24px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(192,57,43,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(192,57,43,0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.header::after {
+  content: '';
+  position: absolute; top: -80px; right: -80px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(192,57,43,0.18) 0%, transparent 65%);
+}
+.header-inner { position: relative; z-index: 2; max-width: 640px; margin: 0 auto; }
+.brand-tag {
+  display: inline-block;
+  background: rgba(192,57,43,0.15);
+  border: 1px solid rgba(192,57,43,0.3);
+  color: #e74c3c;
+  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 4px 12px; border-radius: 20px; margin-bottom: 16px;
+}
+.header h1 {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: clamp(28px, 5vw, 42px);
+  letter-spacing: -0.03em; line-height: 1.1;
+  margin-bottom: 12px;
+}
+.header h1 span { color: var(--red); }
+.header p { color: rgba(255,255,255,0.5); font-size: 14px; max-width: 480px; margin: 0 auto; }
+
+/* ── PROGRESS ── */
+.progress-bar-wrap {
+  background: #222; padding: 14px 24px;
+  display: flex; align-items: center; gap: 14px;
+  position: sticky; top: 0; z-index: 100;
+}
+.progress-label { color: rgba(255,255,255,0.5); font-size: 12px; white-space: nowrap; }
+.progress-track { flex: 1; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--red); border-radius: 2px; transition: width 0.4s ease; width: 0%; }
+.progress-pct { color: #fff; font-size: 12px; font-weight: 500; min-width: 36px; text-align: right; }
+
+/* ── LAYOUT ── */
+.container { max-width: 720px; margin: 0 auto; padding: 32px 16px 80px; }
+
+/* ── SECTION ── */
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.section-header {
+  background: var(--dark);
+  color: #fff; padding: 16px 24px;
+  display: flex; align-items: center; gap: 12px;
+}
+.section-num {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: var(--red); color: #fff;
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.section-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; }
+.section-body { padding: 24px; }
+
+/* ── SUB SECTION ── */
+.subsection { margin-bottom: 24px; }
+.subsection:last-child { margin-bottom: 0; }
+.subsection-title {
+  font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--muted); font-weight: 500; margin-bottom: 14px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+
+/* ── GRID ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+@media (max-width: 560px) {
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+}
+
+/* ── FORM ELEMENTS ── */
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label { font-size: 12px; font-weight: 500; color: #555; }
+.field label .req { color: var(--red); margin-left: 2px; }
+.field label .info { font-size: 11px; color: var(--muted); font-weight: 400; margin-left: 4px; }
+
+input[type=text], input[type=email], input[type=tel], input[type=url], input[type=number], select, textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: #fafaf9;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(192,57,43,0.08);
+  background: #fff;
+}
+textarea { resize: vertical; min-height: 80px; }
+
+/* ── CHECKBOXES ── */
+.checks-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.check-item {
+  display: flex; align-items: center; gap: 7px;
+  padding: 7px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px; cursor: pointer;
+  font-size: 13px; transition: all 0.2s;
+  user-select: none;
+  background: #fafaf9;
+}
+.check-item:hover { border-color: var(--red); background: #fff9f8; }
+.check-item input { display: none; }
+.check-item.checked {
+  border-color: var(--red);
+  background: rgba(192,57,43,0.06);
+  color: var(--red); font-weight: 500;
+}
+.check-box {
+  width: 16px; height: 16px; border-radius: 4px;
+  border: 1.5px solid #ccc; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.check-item.checked .check-box {
+  background: var(--red); border-color: var(--red);
+}
+.check-box svg { display: none; }
+.check-item.checked .check-box svg { display: block; }
+
+/* ── RADIO ── */
+.radio-group { display: flex; flex-wrap: wrap; gap: 8px; }
+.radio-item {
+  padding: 7px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px; cursor: pointer;
+  font-size: 13px; transition: all 0.2s;
+  user-select: none; background: #fafaf9;
+}
+.radio-item:hover { border-color: var(--red); }
+.radio-item.selected { border-color: var(--red); background: rgba(192,57,43,0.06); color: var(--red); font-weight: 500; }
+.radio-item input { display: none; }
+
+/* ── TABLE TARIF ── */
+.tarif-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tarif-table th {
+  background: #f0eeeb; color: var(--muted);
+  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 8px 10px; text-align: left; font-weight: 500;
+}
+.tarif-table td { padding: 6px 10px; border-bottom: 1px solid var(--border); }
+.tarif-table tr:last-child td { border-bottom: none; }
+.tarif-table td:first-child { font-weight: 500; }
+.tarif-table input[type=text], .tarif-table input[type=number] {
+  padding: 6px 10px; font-size: 13px; border-radius: 6px;
+}
+.tarif-table .toggle-active {
+  display: flex; gap: 6px;
+}
+.tog-btn {
+  padding: 4px 10px; border-radius: 6px; font-size: 12px; cursor: pointer;
+  border: 1px solid var(--border); background: #f5f5f5; transition: all 0.15s;
+}
+.tog-btn.active-yes { background: #e8f5e9; border-color: #4caf50; color: #2e7d32; font-weight: 600; }
+.tog-btn.active-no  { background: #ffeaea; border-color: #e57373; color: #c62828; font-weight: 600; }
+
+/* ── SUBMIT ── */
+.submit-section { text-align: center; padding: 20px 0 0; }
+.btn-submit {
+  background: var(--red); color: #fff;
+  border: none; border-radius: 12px;
+  padding: 16px 40px;
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px;
+  cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 4px 20px rgba(192,57,43,0.3);
+  letter-spacing: 0.02em;
+}
+.btn-submit:hover { background: #a93226; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(192,57,43,0.35); }
+.btn-submit:active { transform: translateY(0); }
+
+/* ── SUCCESS ── */
+.success-banner {
+  display: none;
+  background: #e8f5e9; border: 1px solid #a5d6a7;
+  border-radius: 12px; padding: 20px 24px;
+  text-align: center; margin-top: 16px;
+  color: #2e7d32; font-weight: 500;
+}
+
+/* ── INFO BOX ── */
+.info-box {
+  background: rgba(192,57,43,0.04);
+  border-left: 3px solid var(--red);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px; margin-bottom: 16px;
+  font-size: 13px; color: #555; line-height: 1.5;
+}
+
+/* ── FOOTER ── */
+.form-footer {
+  background: var(--dark); color: rgba(255,255,255,0.4);
+  text-align: center; padding: 24px;
+  font-size: 12px; margin-top: 40px;
+}
+.form-footer strong { color: #fff; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="brand-tag">Brief Client</div>
+    <h1>KHILI<span>.</span>PEINTURE</h1>
+    <p>Remplissez ce formulaire pour lancer la création de votre site web. Les champs marqués <span style="color:#e74c3c">*</span> sont indispensables.</p>
+  </div>
+</div>
+
+<div class="progress-bar-wrap">
+  <span class="progress-label">Progression</span>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <span class="progress-pct" id="progressPct">0%</span>
+</div>
+
+<div class="container">
+
+<!-- 1. INFOS GÉNÉRALES -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <div class="section-title">Informations générales de l'entreprise</div>
+  </div>
+  <div class="section-body">
+
+    <div class="subsection">
+      <div class="subsection-title">1.1 — Identité officielle</div>
+      <div class="grid-2">
+        <div class="field"><label>Nom commercial <span class="req">*</span></label><input type="text" placeholder="KHILI Peinture"></div>
+        <div class="field"><label>Raison sociale <span class="info">(si différente)</span></label><input type="text"></div>
+        <div class="field"><label>SIRET <span class="req">*</span></label><input type="text" placeholder="XXX XXX XXX XXXXX"></div>
+        <div class="field"><label>N° TVA intracommunautaire</label><input type="text" placeholder="FR XX XXXXXXXXX"></div>
+        <div class="field"><label>Forme juridique <span class="req">*</span></label>
+          <select>
+            <option value="">Sélectionner...</option>
+            <option>Auto-entrepreneur</option>
+            <option>EI</option>
+            <option>EURL</option>
+            <option>SARL</option>
+            <option>SAS</option>
+            <option>Autre</option>
+          </select>
+        </div>
+        <div class="field"><label>Date de création <span class="req">*</span></label><input type="text" placeholder="ex : 2011"></div>
+        <div class="field"><label>N° garantie décennale <span class="req">*</span></label><input type="text"></div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">1.2 — Coordonnées complètes</div>
+      <div class="grid-2">
+        <div class="field" style="grid-column:1/-1"><label>Adresse postale complète <span class="req">*</span></label><input type="text" placeholder="Rue, code postal, ville"></div>
+        <div class="field"><label>Téléphone principal <span class="req">*</span></label><input type="tel" placeholder="06 XX XX XX XX"></div>
+        <div class="field"><label>Téléphone secondaire / WhatsApp</label><input type="tel"></div>
+        <div class="field"><label>Email professionnel <span class="req">*</span></label><input type="email" placeholder="contact@khilipeinture.fr"></div>
+        <div class="field"><label>Email affiché sur le site</label><input type="email"></div>
+        <div class="field"><label>Site actuel <span class="info">(si existant)</span></label><input type="url" placeholder="https://..."></div>
+        <div class="field"><label>Réseaux sociaux <span class="info">(Facebook, Instagram...)</span></label><input type="text" placeholder="liens ou @"></div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">1.3 — Horaires & disponibilités</div>
+      <div class="grid-2">
+        <div class="field"><label>Jours d'intervention <span class="req">*</span></label><input type="text" placeholder="ex : Lundi–Vendredi"></div>
+        <div class="field"><label>Horaires <span class="req">*</span></label><input type="text" placeholder="ex : 8h–19h"></div>
+        <div class="field"><label>Délai moyen avant intervention</label><input type="text" placeholder="ex : 2–3 semaines"></div>
+        <div class="field"><label>Urgences acceptées ?</label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="urgences" value="Oui">Oui</label>
+            <label class="radio-item"><input type="radio" name="urgences" value="Non">Non</label>
+            <label class="radio-item"><input type="radio" name="urgences" value="Selon planning">Selon planning</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 2. PORTRAIT ARTISAN -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <div class="section-title">Portrait de l'artisan</div>
+  </div>
+  <div class="section-body">
+
+    <div class="subsection">
+      <div class="subsection-title">2.1 — Votre histoire</div>
+      <div class="grid-2">
+        <div class="field"><label>Prénom <span class="req">*</span></label><input type="text"></div>
+        <div class="field"><label>Nom <span class="info">(ou initiales)</span></label><input type="text"></div>
+        <div class="field"><label>Années d'expérience <span class="req">*</span></label><input type="number" placeholder="ex : 13"></div>
+        <div class="field"><label>Comment avez-vous démarré ?</label><input type="text" placeholder="Apprentissage, CAP, famille..."></div>
+        <div class="field" style="grid-column:1/-1"><label>Votre parcours en quelques phrases</label><textarea placeholder="3–5 lignes libres..."></textarea></div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">2.2 — Vos valeurs & engagements</div>
+      <div class="checks-grid" id="valeurs">
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Qualité des finitions</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Ponctualité</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Propreté chantier</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Prix transparents</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Écoute client</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Conseil personnalisé</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Matériaux pro</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Garantie décennale</label>
+      </div>
+      <div class="field" style="margin-top:12px"><label>Autre engagement :</label><input type="text" placeholder="Précisez..."></div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">2.3 — Ce qui vous différencie</div>
+      <div class="field"><label>Pourquoi choisir KHILI Peinture ? <span class="req">*</span></label><textarea placeholder="Soyez direct et sincère..."></textarea></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 3. SERVICES -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <div class="section-title">Services & tarification</div>
+  </div>
+  <div class="section-body">
+    <div class="subsection">
+      <div class="subsection-title">3.1 — Services proposés</div>
+      <div class="info-box">Cochez les services actifs et indiquez vos tarifs. Laissez vide si vous ne souhaitez pas afficher les prix.</div>
+      <div style="overflow-x:auto">
+      <table class="tarif-table">
+        <thead><tr><th>Prestation</th><th>Actif ?</th><th>Tarif HT (€/m²)</th><th>Précisions</th></tr></thead>
+        <tbody id="tarifsBody">
+        </tbody>
+      </table>
+      </div>
+    </div>
+    <div class="subsection">
+      <div class="subsection-title">3.2 — Politique tarifaire</div>
+      <div class="grid-2">
+        <div class="field"><label>Afficher les tarifs publiquement ?</label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="tarif_public" value="Oui">Oui</label>
+            <label class="radio-item"><input type="radio" name="tarif_public" value="Non">Non</label>
+            <label class="radio-item"><input type="radio" name="tarif_public" value="Sur devis">Sur devis</label>
+          </div>
+        </div>
+        <div class="field"><label>Forfait déplacement <span class="req">*</span></label><input type="text" placeholder="ex : 60€ HT"></div>
+        <div class="field"><label>Zone de déplacement gratuit</label><input type="text" placeholder="km ou communes"></div>
+        <div class="field"><label>Acompte à la commande <span class="req">*</span></label><input type="text" placeholder="ex : 30%"></div>
+        <div class="field"><label>Délai de paiement</label><input type="text" placeholder="ex : solde à la livraison"></div>
+        <div class="field"><label>Modes de paiement acceptés <span class="req">*</span></label><input type="text" placeholder="chèque, virement, espèces..."></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. ZONE -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <div class="section-title">Zone d'intervention</div>
+  </div>
+  <div class="section-body">
+    <div class="grid-2">
+      <div class="field"><label>Ville principale <span class="req">*</span></label><input type="text" placeholder="Draguignan"></div>
+      <div class="field"><label>Département(s) <span class="req">*</span></label><input type="text" placeholder="Var — 83"></div>
+      <div class="field"><label>Rayon d'intervention (km) <span class="req">*</span></label><input type="number" placeholder="ex : 40"></div>
+      <div class="field"><label>Hors zone possible ?</label>
+        <div class="radio-group">
+          <label class="radio-item"><input type="radio" name="hors_zone" value="Oui">Oui</label>
+          <label class="radio-item"><input type="radio" name="hors_zone" value="Sur devis">Sur devis</label>
+          <label class="radio-item"><input type="radio" name="hors_zone" value="Non">Non</label>
+        </div>
+      </div>
+      <div class="field" style="grid-column:1/-1"><label>Communes desservies régulièrement</label><textarea placeholder="Listez les communes..."></textarea></div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. PHOTOS -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <div class="section-title">Photos & références visuelles</div>
+  </div>
+  <div class="section-body">
+    <div class="subsection">
+      <div class="subsection-title">5.1 — Photos disponibles</div>
+      <div class="checks-grid">
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Avant / Après</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Chantier en cours</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Finitions détail</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Façades terminées</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Béton ciré</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Stucco</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Papier peint</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Peinture intérieure</label>
+      </div>
+      <div class="grid-2" style="margin-top:12px">
+        <div class="field"><label>Nombre total de photos disponibles</label><input type="number"></div>
+        <div class="field"><label>Format des photos</label><input type="text" placeholder="jpg, png, téléphone..."></div>
+        <div class="field" style="grid-column:1/-1"><label>Comment les envoyer ?</label><input type="text" placeholder="WeTransfer, email, USB..."></div>
+      </div>
+    </div>
+    <div class="subsection">
+      <div class="subsection-title">5.2 — Inspirations visuelles</div>
+      <div class="grid-2">
+        <div class="field" style="grid-column:1/-1"><label>Sites inspirants</label><input type="text" placeholder="URLs ou noms de sites"></div>
+        <div class="field"><label>Couleurs aimées</label><input type="text" placeholder="ex : rouge, blanc, noir..."></div>
+        <div class="field"><label>Style visuel souhaité</label></div>
+      </div>
+      <div class="checks-grid" style="margin-top:8px">
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Épuré / Minimaliste</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Chaleureux / Artisanal</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Luxe / Premium</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Moderne / Tech</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Classique / Traditionnel</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Coloré / Dynamique</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Sombre / Élégant</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Clair / Aéré</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 6. AVIS -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">6</div>
+    <div class="section-title">Avis clients & témoignages</div>
+  </div>
+  <div class="section-body">
+    <div class="subsection">
+      <div class="subsection-title">6.1 — Avis existants</div>
+      <div class="checks-grid">
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Google My Business</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Pages Jaunes</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Houzz</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Bouche à oreille uniquement</label>
+      </div>
+      <div class="grid-2" style="margin-top:12px">
+        <div class="field" style="grid-column:1/-1"><label>Lien vers vos avis Google</label><input type="url" placeholder="https://g.page/..."></div>
+        <div class="field"><label>Note moyenne (/5)</label><input type="text" placeholder="ex : 4.8"></div>
+        <div class="field"><label>Nombre d'avis</label><input type="number"></div>
+      </div>
+    </div>
+    <div class="subsection">
+      <div class="subsection-title">6.2 — Témoignages clients (3 minimum)</div>
+      <div id="temoignagesContainer"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 7. AGENT IA -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">7</div>
+    <div class="section-title">Agent IA & devis en ligne <span style="font-size:11px;font-weight:400;opacity:0.6">(option 300€ — passer à 8 si non souhaité)</span></div>
+  </div>
+  <div class="section-body">
+    <div class="subsection">
+      <div class="subsection-title">7.1 — Configuration du devis automatique</div>
+      <div class="grid-2">
+        <div class="field"><label>Afficher les prix dans le devis auto ?</label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="prix_devis" value="Oui">Oui</label>
+            <label class="radio-item"><input type="radio" name="prix_devis" value="Non">Non</label>
+          </div>
+        </div>
+        <div class="field"><label>Validité du devis (jours) <span class="req">*</span></label><input type="number" placeholder="ex : 30"></div>
+        <div class="field"><label>Email réception des devis signés <span class="req">*</span></label><input type="email"></div>
+        <div class="field"><label>Mention légale à ajouter</label><input type="text"></div>
+        <div class="field"><label>Signature numérique acceptée ?</label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="sign_num" value="Oui">Oui</label>
+            <label class="radio-item"><input type="radio" name="sign_num" value="Non">Non</label>
+          </div>
+        </div>
+        <div class="field"><label>Confirmation auto par email ?</label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="confirm_email" value="Oui">Oui</label>
+            <label class="radio-item"><input type="radio" name="confirm_email" value="Non">Non</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="subsection">
+      <div class="subsection-title">7.2 — Questions que l'IA doit poser</div>
+      <div class="checks-grid">
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Type de logement</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Étage / accès échafaudage</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>État des murs</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Nombre de pièces</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Couleur souhaitée</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Délai souhaité</label>
+      </div>
+      <div class="field" style="margin-top:10px"><label>Autres questions spécifiques :</label><input type="text"></div>
+    </div>
+    <div class="subsection">
+      <div class="subsection-title">7.3 — Google Agenda</div>
+      <div class="grid-2">
+        <div class="field"><label>Email compte Google <span class="req">*</span></label><input type="email"></div>
+        <div class="field"><label>Durée par défaut d'un RDV (h)</label><input type="number" placeholder="ex : 1"></div>
+        <div class="field" style="grid-column:1/-1"><label>Jours bloqués / indisponibilités</label><input type="text" placeholder="ex : tous les vendredis, août..."></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 8. PAGES & CONTENU -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">8</div>
+    <div class="section-title">Pages & contenu du site</div>
+  </div>
+  <div class="section-body">
+    <div class="subsection">
+      <div class="subsection-title">8.1 — Pages souhaitées</div>
+      <div class="checks-grid">
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Accueil</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Services</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Réalisations / Galerie</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>À propos</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Devis en ligne</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Contact</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Zone d'intervention</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Blog / Conseils</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Témoignages</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>FAQ</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Mentions légales</label>
+      </div>
+    </div>
+    <div class="subsection">
+      <div class="subsection-title">8.2 — Slogan principal</div>
+      <div class="field"><label>Votre slogan <span class="req">*</span></label><input type="text" placeholder="ex : L'art de peindre, la passion du détail."></div>
+    </div>
+    <div class="subsection">
+      <div class="subsection-title">8.3 — Texte de présentation</div>
+      <div class="grid-2">
+        <div class="field"><label>Textes existants à réutiliser ?</label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="textes_existants" value="Oui">Oui</label>
+            <label class="radio-item"><input type="radio" name="textes_existants" value="Non">Non</label>
+          </div>
+        </div>
+        <div class="field"><label>Souhaitez-vous qu'on rédige les textes ?</label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="redaction" value="Oui">Oui</label>
+            <label class="radio-item"><input type="radio" name="redaction" value="Non">Non</label>
+          </div>
+        </div>
+        <div class="field" style="grid-column:1/-1"><label>Ton souhaité</label>
+          <div class="checks-grid">
+            <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Professionnel / Formel</label>
+            <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Chaleureux / Humain</label>
+            <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Direct / Efficace</label>
+            <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Enthousiaste / Dynamique</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="subsection">
+      <div class="subsection-title">8.4 — FAQ (questions fréquentes)</div>
+      <div id="faqContainer"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 9. SEO -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">9</div>
+    <div class="section-title">SEO & visibilité Google</div>
+  </div>
+  <div class="section-body">
+    <div class="subsection">
+      <div class="subsection-title">9.1 — Mots-clés cibles</div>
+      <div class="field"><label>Mot-clé principal</label><input type="text" placeholder="ex : peintre Draguignan"></div>
+      <div class="field" style="margin-top:10px"><label>Mots-clés secondaires (3 à 5)</label><textarea placeholder="ex : peintre Var, ravalement façade Draguignan..." style="min-height:60px"></textarea></div>
+      <div class="field" style="margin-top:10px"><label>Ville(s) cible(s) pour le SEO local</label><input type="text" placeholder="ex : Draguignan, Fréjus, Brignoles..."></div>
+    </div>
+    <div class="subsection">
+      <div class="subsection-title">9.2 — Fiche Google My Business</div>
+      <div class="grid-2">
+        <div class="field"><label>Fiche Google existante ?</label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="gmb" value="Oui">Oui</label>
+            <label class="radio-item"><input type="radio" name="gmb" value="Non">Non</label>
+          </div>
+        </div>
+        <div class="field"><label>URL de la fiche Google</label><input type="url" placeholder="https://g.page/..."></div>
+        <div class="field"><label>Catégorie principale</label><input type="text" placeholder="ex : Peintre en bâtiment"></div>
+        <div class="field"><label>Optimiser / créer la fiche ?</label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="gmb_opti" value="Oui">Oui</label>
+            <label class="radio-item"><input type="radio" name="gmb_opti" value="Non">Non</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 10. IDENTITÉ VISUELLE -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">10</div>
+    <div class="section-title">Identité visuelle & charte graphique</div>
+  </div>
+  <div class="section-body">
+    <div class="subsection">
+      <div class="subsection-title">10.1 — Logo</div>
+      <div class="grid-2">
+        <div class="field"><label>Logo existant ?</label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="logo_exist" value="Oui">Oui</label>
+            <label class="radio-item"><input type="radio" name="logo_exist" value="Non">Non</label>
+          </div>
+        </div>
+        <div class="field"><label>Format logo disponible</label><input type="text" placeholder="png, svg, pdf..."></div>
+        <div class="field"><label>Couleurs actuelles de l'entreprise</label><input type="text" placeholder="ex : rouge, blanc, noir"></div>
+        <div class="field"><label>Police / typographie utilisée</label><input type="text"></div>
+        <div class="field"><label>Souhaitez-vous un nouveau logo ?</label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="logo_new" value="Oui">Oui</label>
+            <label class="radio-item"><input type="radio" name="logo_new" value="Non">Non</label>
+            <label class="radio-item"><input type="radio" name="logo_new" value="Adapter">Adapter l'existant</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="subsection">
+      <div class="subsection-title">10.2 — Couleurs du site</div>
+      <div class="info-box">Par défaut, votre site utilise rouge (#C0392B), noir et blanc.</div>
+      <div class="grid-2">
+        <div class="field"><label>Conserver le rouge KHILI Peinture ?</label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="rouge" value="Oui">Oui</label>
+            <label class="radio-item"><input type="radio" name="rouge" value="Non">Non – Remplacer par :</label>
+          </div>
+        </div>
+        <div class="field"><label>Couleur principale souhaitée</label><input type="text" placeholder="code hex ou description"></div>
+        <div class="field"><label>Couleur secondaire / accent</label><input type="text"></div>
+        <div class="field"><label>Fond du site</label><input type="text" placeholder="clair / foncé / crème..."></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 11. OBJECTIFS -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">11</div>
+    <div class="section-title">Objectifs & priorités du site</div>
+  </div>
+  <div class="section-body">
+    <div class="subsection">
+      <div class="subsection-title">11.1 — Objectif principal</div>
+      <div class="checks-grid">
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Générer des demandes de devis</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Montrer les réalisations</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Être trouvé sur Google</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Rassurer les clients</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Automatiser les devis</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Fidéliser les anciens clients</label>
+      </div>
+    </div>
+    <div class="subsection">
+      <div class="subsection-title">11.2 — Cible client</div>
+      <div class="checks-grid">
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Particuliers</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Professionnels / Entreprises</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Copropriétés / Syndics</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Promoteurs</label>
+      </div>
+      <div class="grid-2" style="margin-top:12px">
+        <div class="field"><label>Tranche d'âge typique</label><input type="text" placeholder="ex : 35–60 ans"></div>
+        <div class="field"><label>Budget moyen d'un chantier (€)</label><input type="text" placeholder="ex : 2 000–5 000€"></div>
+        <div class="field"><label>Type de bien le plus courant</label><input type="text" placeholder="maison, appart, local..."></div>
+      </div>
+    </div>
+    <div class="subsection">
+      <div class="subsection-title">11.3 — Ce que vous ne voulez PAS sur le site</div>
+      <div class="field"><label>Couleurs, styles, formulations à éviter...</label><textarea placeholder="Soyez direct !"></textarea></div>
+    </div>
+  </div>
+</div>
+
+<!-- 12. TECHNIQUE -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">12</div>
+    <div class="section-title">Aspects techniques</div>
+  </div>
+  <div class="section-body">
+    <div class="subsection">
+      <div class="subsection-title">12.1 — Nom de domaine</div>
+      <div class="grid-2">
+        <div class="field"><label>Nom de domaine souhaité <span class="req">*</span></label><input type="text" placeholder="ex : khilipeinture.fr"></div>
+        <div class="field"><label>Déjà acheté ?</label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="domaine" value="Oui">Oui – Où :</label>
+            <label class="radio-item"><input type="radio" name="domaine" value="Non">Non</label>
+          </div>
+        </div>
+        <div class="field"><label>Hébergeur actuel</label><input type="text"></div>
+        <div class="field"><label>Accès FTP / hébergeur disponible ?</label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="ftp" value="Oui">Oui</label>
+            <label class="radio-item"><input type="radio" name="ftp" value="Non">Non</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="subsection">
+      <div class="subsection-title">12.2 — Fonctionnalités souhaitées</div>
+      <div class="checks-grid">
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Agent IA devis</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Formulaire de contact</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Galerie photos</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Blog / actualités</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Prise de RDV en ligne</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Google Maps intégré</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Bouton WhatsApp</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Notifications SMS</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Envoi devis par email</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Signature électronique</label>
+      </div>
+    </div>
+    <div class="subsection">
+      <div class="subsection-title">12.3 — Responsive & mobile</div>
+      <div class="grid-2">
+        <div class="field"><label>Priorité affichage ?</label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="responsive" value="Mobile">Mobile</label>
+            <label class="radio-item"><input type="radio" name="responsive" value="Tablette">Tablette</label>
+            <label class="radio-item"><input type="radio" name="responsive" value="Ordinateur">Ordinateur</label>
+            <label class="radio-item"><input type="radio" name="responsive" value="Toutes">Toutes</label>
+          </div>
+        </div>
+        <div class="field"><label>Vos clients utilisent surtout ?</label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="device" value="Téléphone">Téléphone</label>
+            <label class="radio-item"><input type="radio" name="device" value="PC">PC</label>
+            <label class="radio-item"><input type="radio" name="device" value="Les deux">Les deux</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 13. BUDGET -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">13</div>
+    <div class="section-title">Budget & délais</div>
+  </div>
+  <div class="section-body">
+    <div class="subsection">
+      <div class="subsection-title">13.1 — Budget</div>
+      <div class="checks-grid">
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Moins de 500€</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>500€ – 1 000€</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>1 000€ – 2 000€</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Plus de 2 000€</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Budget maintenance mensuel</label>
+        <label class="check-item"><input type="checkbox"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>Pas de budget récurrent</label>
+      </div>
+      <div class="grid-2" style="margin-top:12px">
+        <div class="field"><label>Budget total disponible (€)</label><input type="text"></div>
+        <div class="field"><label>Paiement</label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="paiement_mode" value="En une fois">En une fois</label>
+            <label class="radio-item"><input type="radio" name="paiement_mode" value="Échelonné">Échelonné</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="subsection">
+      <div class="subsection-title">13.2 — Délais</div>
+      <div class="grid-2">
+        <div class="field"><label>Date idéale de mise en ligne <span class="req">*</span></label><input type="text" placeholder="ex : fin mars 2026"></div>
+        <div class="field"><label>Date limite absolue</label><input type="text"></div>
+        <div class="field" style="grid-column:1/-1"><label>Contrainte particulière</label><input type="text" placeholder="saison haute, événement..."></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 14. QUESTIONS LIBRES -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">14</div>
+    <div class="section-title">Questions libres</div>
+  </div>
+  <div class="section-body">
+    <div class="subsection">
+      <div class="subsection-title">14.1 — Le site de vos rêves</div>
+      <div class="field"><label>Décrivez votre site parfait. Qu'est-ce qu'un client ressentira ? Qu'est-ce qui le fera vous appeler ?</label><textarea style="min-height:100px"></textarea></div>
+    </div>
+    <div class="subsection">
+      <div class="subsection-title">14.2 — Ce qui vous frustre actuellement</div>
+      <div class="field"><label>Pas de site, mauvais site, pas assez de clients, concurrence... Soyez direct !</label><textarea style="min-height:80px"></textarea></div>
+    </div>
+    <div class="subsection">
+      <div class="subsection-title">14.3 — Questions / remarques</div>
+      <div class="field"><label>Tout ce que vous voulez ajouter, demander, clarifier.</label><textarea style="min-height:80px"></textarea></div>
+    </div>
+  </div>
+</div>
+
+<div class="submit-section">
+  <button class="btn-submit" onclick="submitForm()">✦ Envoyer mon brief à Loïc</button>
+  <div class="success-banner" id="successBanner">
+    ✅ Merci ! Votre brief a bien été envoyé. Loïc vous contactera très rapidement.<br>
+    <small style="opacity:0.7">Une copie a été générée — pensez à la télécharger.</small>
+    <br><br>
+    <button onclick="downloadSummary()" style="background:#2e7d32;color:#fff;border:none;padding:10px 22px;border-radius:8px;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif">⬇ Télécharger mon résumé</button>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<div class="form-footer">
+  <strong>Loïc Maugy</strong> — Créateur de sites web · IA · SEO<br>
+  <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="335e5246544a5f5c5a501d020373545e525a5f1d505c5e">[email&#160;protected]</a> · 06 10 16 67 87 · loic-maugy.github.io/business<br><br>
+  <em>Des sites modernes qui attirent — optimisés dès le premier jour.</em>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── Tarifs ──
+const prestations = [
+  'Peinture intérieure (murs, plafonds)',
+  'Peinture extérieure (volets, façades)',
+  'Béton ciré (sols & murs)',
+  'Stucco décoratif',
+  'Pose de papier peint',
+  'Ravalement de façade',
+  'Isolation thermique par l\'extérieur (ITE)',
+  'Traitement anti-humidité / moisissures',
+  'Peinture décorative / effets spéciaux',
+  'Autre (à préciser)'
+];
+const tbody = document.getElementById('tarifsBody');
+prestations.forEach((p, i) => {
+  tbody.innerHTML += `<tr>
+    <td>${p}</td>
+    <td>
+      <div class="toggle-active">
+        <button class="tog-btn" onclick="toggleTarif(this,'yes')" data-row="${i}">Oui</button>
+        <button class="tog-btn" onclick="toggleTarif(this,'no')" data-row="${i}">Non</button>
+      </div>
+    </td>
+    <td><input type="text" placeholder="XX €/m²" style="width:90px"></td>
+    <td><input type="text" placeholder="Précisions..."></td>
+  </tr>`;
+});
+function toggleTarif(btn, val) {
+  const row = btn.closest('tr').querySelectorAll('.tog-btn');
+  row.forEach(b => { b.classList.remove('active-yes','active-no'); });
+  btn.classList.add(val === 'yes' ? 'active-yes' : 'active-no');
+}
+
+// ── Témoignages ──
+const temContainer = document.getElementById('temoignagesContainer');
+for (let t = 1; t <= 3; t++) {
+  temContainer.innerHTML += `
+    <div style="background:#fafaf9;border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px">
+      <div style="font-size:12px;font-weight:600;color:var(--red);margin-bottom:10px">Témoignage ${t}</div>
+      <div class="grid-2">
+        <div class="field"><label>Prénom client</label><input type="text"></div>
+        <div class="field"><label>Ville</label><input type="text"></div>
+        <div class="field"><label>Type de travaux</label><input type="text"></div>
+        <div class="field"><label>Note /5</label><input type="text" placeholder="ex : 5/5"></div>
+        <div class="field" style="grid-column:1/-1"><label>Texte du témoignage</label><textarea placeholder="3–5 lignes..." style="min-height:70px"></textarea></div>
+      </div>
+    </div>`;
+}
+
+// ── FAQ ──
+const faqContainer = document.getElementById('faqContainer');
+for (let f = 1; f <= 5; f++) {
+  faqContainer.innerHTML += `
+    <div class="grid-2" style="margin-bottom:10px">
+      <div class="field"><label>Question ${f} :</label><input type="text"></div>
+      <div class="field"><label>Réponse ${f} :</label><input type="text"></div>
+    </div>`;
+}
+
+// ── Checkboxes ──
+document.querySelectorAll('.check-item').forEach(item => {
+  item.addEventListener('click', () => {
+    item.classList.toggle('checked');
+    updateProgress();
+  });
+});
+document.querySelectorAll('.radio-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const name = item.querySelector('input').getAttribute('name');
+    document.querySelectorAll(`.radio-item input[name="${name}"]`).forEach(inp => {
+      inp.closest('.radio-item').classList.remove('selected');
+    });
+    item.classList.add('selected');
+    updateProgress();
+  });
+});
+
+// ── Progress ──
+function updateProgress() {
+  const required = document.querySelectorAll('input[type=text][placeholder*="*"], input.req');
+  const allInputs = document.querySelectorAll('input[type=text], input[type=email], input[type=tel], textarea, input[type=number]');
+  let filled = 0;
+  allInputs.forEach(inp => { if (inp.value.trim()) filled++; });
+  const radios = document.querySelectorAll('.radio-item.selected').length;
+  const checks = document.querySelectorAll('.check-item.checked').length;
+  const total = allInputs.length + 20;
+  const pct = Math.min(100, Math.round(((filled + radios + checks) / total) * 100));
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+document.querySelectorAll('input, textarea, select').forEach(el => {
+  el.addEventListener('input', updateProgress);
+});
+
+// ── Submit ──
+async function submitForm() {
+  const btn = document.querySelector('.btn-submit');
+  btn.textContent = '⏳ Envoi en cours...';
+  btn.disabled = true;
+
+  // Collecte toutes les données
+  const data = {};
+  document.querySelectorAll('input[type=text], input[type=email], input[type=tel], input[type=url], input[type=number], textarea').forEach(inp => {
+    if (inp.value.trim()) {
+      const label = inp.closest('.field')?.querySelector('label')?.innerText?.replace(/[*ℹ]/g,'').trim() || inp.placeholder || 'champ';
+      data[label] = inp.value.trim();
+    }
+  });
+  document.querySelectorAll('.radio-item.selected').forEach(r => {
+    data[r.querySelector('input').name] = r.innerText.trim();
+  });
+  const checked = [];
+  document.querySelectorAll('.check-item.checked').forEach(c => checked.push(c.innerText.trim()));
+  if (checked.length) data['Options cochées'] = checked.join(', ');
+
+  // Envoi à Formspree
+  try {
+    const res = await fetch('https://formspree.io/f/mzdjzooe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ ...data, _subject: '📋 Nouveau brief client – KHILI Peinture' })
+    });
+    if (res.ok) {
+      btn.textContent = '✅ Brief envoyé !';
+      document.getElementById('successBanner').style.display = 'block';
+      document.getElementById('successBanner').scrollIntoView({ behavior: 'smooth' });
+    } else {
+      throw new Error('Erreur réseau');
+    }
+  } catch(e) {
+    btn.textContent = '✦ Envoyer mon brief à Loïc';
+    btn.disabled = false;
+    alert('❌ Erreur lors de l\'envoi. Vérifiez votre connexion et réessayez.');
+  }
+}
+
+// ── Download summary ──
+function downloadSummary() {
+  let summary = '=== BRIEF KHILI.PEINTURE ===\n\n';
+  document.querySelectorAll('input[type=text], input[type=email], input[type=tel], input[type=url], input[type=number], textarea').forEach(inp => {
+    if (inp.value.trim()) {
+      const label = inp.closest('.field')?.querySelector('label')?.innerText || inp.placeholder || 'Champ';
+      summary += `${label.replace(/[*ℹ]/g,'').trim()} : ${inp.value.trim()}\n`;
+    }
+  });
+  document.querySelectorAll('.radio-item.selected').forEach(r => {
+    summary += `${r.querySelector('input').name} : ${r.innerText.trim()}\n`;
+  });
+  document.querySelectorAll('.check-item.checked').forEach(c => {
+    summary += `✓ ${c.innerText.trim()}\
